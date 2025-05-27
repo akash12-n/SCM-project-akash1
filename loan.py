@@ -297,4 +297,146 @@ def main():
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Loan Calculator - Green Theme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Updated Green Theme Styles */
+        .form-input:focus {
+            border-color: #4ADE80; /* Green-400 */
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.3); /* Lighter green shadow */
+        }
+        .btn-primary {
+            background-color: #22C55E; /* Green-500 */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #16A34A; /* Green-600 */
+        }
+        .result-box {
+            background-color: #F0FDF4; /* Green-50 */
+            border-left-width: 4px;
+            border-color: #22C55E; /* Green-500 */
+        }
+        .result-value {
+            color: #15803D; /* Green-700 */
+        }
+        .header-title {
+            color: #14532D; /* Dark Green-800 */
+        }
+    </style>
+</head>
+<body class="bg-green-50 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-lg">
+        <h1 class="text-2xl md:text-3xl font-bold text-center header-title mb-8">Loan Calculator</h1>
+
+        <div class="mb-5">
+            <label for="loanAmount" class="block text-sm font-medium text-gray-700 mb-1.5">Loan Amount ($)</label>
+            <input type="number" id="loanAmount" name="loanAmount" placeholder="e.g., 10000" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none sm:text-sm transition-shadow duration-150" value="10000">
+        </div>
+
+        <div class="mb-5">
+            <label for="interestRate" class="block text-sm font-medium text-gray-700 mb-1.5">Annual Interest Rate (%)</label>
+            <input type="number" id="interestRate" name="interestRate" placeholder="e.g., 5" step="0.01" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none sm:text-sm transition-shadow duration-150" value="5">
+        </div>
+
+        <div class="mb-8"> {/* Increased bottom margin */}
+            <label for="loanTerm" class="block text-sm font-medium text-gray-700 mb-1.5">Loan Term (Years)</label>
+            <input type="number" id="loanTerm" name="loanTerm" placeholder="e.g., 5" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none sm:text-sm transition-shadow duration-150" value="5">
+        </div>
+
+        <button id="calculateBtn" class="btn-primary w-full font-semibold py-3.5 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">
+            Calculate
+        </button>
+
+        <div id="resultsArea" class="mt-8 space-y-4 hidden"> {/* Increased top margin and spacing */}
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Results:</h2>
+            <div class="result-box p-4 rounded-md">
+                <p class="text-sm text-gray-600">Monthly Payment:</p>
+                <p id="monthlyPayment" class="text-xl font-semibold result-value">$0.00</p> {/* Increased font size */}
+            </div>
+            <div class="result-box p-4 rounded-md">
+                <p class="text-sm text-gray-600">Total Interest Paid:</p>
+                <p id="totalInterest" class="text-xl font-semibold result-value">$0.00</p> {/* Increased font size */}
+            </div>
+            <div class="result-box p-4 rounded-md">
+                <p class="text-sm text-gray-600">Total Amount Paid:</p>
+                <p id="totalAmount" class="text-xl font-semibold result-value">$0.00</p> {/* Increased font size */}
+            </div>
+        </div>
+        <div id="errorBox" class="mt-5 p-3.5 rounded-md text-sm text-center hidden bg-red-100 text-red-700 border border-red-300"></div>
+
+    </div>
+
+    <script>
+        const loanAmountInput = document.getElementById('loanAmount');
+        const interestRateInput = document.getElementById('interestRate');
+        const loanTermInput = document.getElementById('loanTerm');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resultsArea = document.getElementById('resultsArea');
+        const monthlyPaymentEl = document.getElementById('monthlyPayment');
+        const totalInterestEl = document.getElementById('totalInterest');
+        const totalAmountEl = document.getElementById('totalAmount');
+        const errorBox = document.getElementById('errorBox');
+
+        calculateBtn.addEventListener('click', () => {
+            // Clear previous errors and hide results
+            errorBox.classList.add('hidden');
+            errorBox.textContent = '';
+            resultsArea.classList.add('hidden');
+
+            const principal = parseFloat(loanAmountInput.value);
+            const annualInterestRate = parseFloat(interestRateInput.value);
+            const loanTermYears = parseInt(loanTermInput.value);
+
+            // Validate inputs
+            if (isNaN(principal) || principal <= 0 ||
+                isNaN(annualInterestRate) || annualInterestRate < 0 || // Allow 0% interest
+                isNaN(loanTermYears) || loanTermYears <= 0) {
+                errorBox.textContent = 'Please enter valid positive numbers for all fields (interest rate can be 0).';
+                errorBox.classList.remove('hidden');
+                return;
+            }
+
+            const monthlyInterestRate = (annualInterestRate / 100) / 12;
+            const numberOfPayments = loanTermYears * 12;
+
+            let monthlyPayment;
+            // Calculate monthly payment
+            if (monthlyInterestRate === 0) { // Handle zero interest rate
+                monthlyPayment = principal / numberOfPayments;
+            } else {
+                monthlyPayment = principal * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) / (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+            }
+
+            const totalAmountPaid = monthlyPayment * numberOfPayments;
+            const totalInterestPaid = totalAmountPaid - principal;
+
+            // Check for calculation errors (e.g. if inputs result in NaN or Infinity)
+            if (isNaN(monthlyPayment) || !isFinite(monthlyPayment)) {
+                 errorBox.textContent = 'Could not calculate payment. Please check your inputs (e.g., interest rate might be too high for the term).';
+                errorBox.classList.remove('hidden');
+                return;
+            }
+
+            // Display results
+            monthlyPaymentEl.textContent = `$${monthlyPayment.toFixed(2)}`;
+            totalInterestEl.textContent = `$${totalInterestPaid.toFixed(2)}`;
+            totalAmountEl.textContent = `$${totalAmountPaid.toFixed(2)}`;
+
+            resultsArea.classList.remove('hidden');
+        });
+    </script>
+
+</body>
+</html>
 if __name__ == "__main__":
