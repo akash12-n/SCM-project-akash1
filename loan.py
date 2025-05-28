@@ -98,3 +98,103 @@
                                     <span>Prepare meeting agenda</span>
                                 </label>
                                 <span class="text-sm text-gray-500">Jun 15</span>
+                                </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="task5" class="task-checkbox hidden">
+                                <label for="task5" class="task-label flex-1 flex items-center">
+                                    <span class="w-4 h-4 border border-gray-300 rounded mr-3"></span>
+                                    <span>Send monthly reports</span>
+                                </label>
+                                <span class="text-sm text-gray-500">Jun 18</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team members -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold mb-6">Team Members</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Team member" class="w-10 h-10 rounded-full mr-3">
+                                    <div>
+                                        <p class="font-medium">Michael Brown</p>
+                                        <p class="text-sm text-gray-500">Frontend Developer</p>
+                                    </div>
+                                </div>
+                                <button class="p-2 text-gray-400 hover:text-blue-600">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Team member" class="w-10 h-10 rounded-full mr-3">
+                                    <div>
+                                        <p class="font-medium">Emily Davis</p>
+                                        <p class="text-sm text-gray-500">UX Designer</p>
+                                    </div>
+                                </div>
+                                <button class="p-2 text-gray-400 hover:text-blue-600">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Team member" class="w-10 h-10 rounded-full mr-3">
+                                    <div>
+                                        <p class="font-medium">Robert Wilson</p>
+                                        <p class="text-sm text-gray-500">Backend Developer</p>
+                                    </div>
+                                </div>
+                                <button class="p-2 text-gray-400 hover:text-blue-600">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/women/90.jpg" alt="Team member" class="w-10 h-10 rounded-full mr-3">
+                                    <div>
+                                        <p class="font-medium">Jessica Martinez</p>
+                                        <p class="text-sm text-gray-500">Project Manager</p>
+                                    </div>
+                                </div>
+                                <button class="p-2 text-gray-400 hover:text-blue-600">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="w-full mt-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition">
+                            View All Members
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('sidebar-open');
+        });
+
+        // Task checkboxes functionality
+        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const label = this.nextElementSibling;
+                if (this.checked) {
+                    label.querySelector('span:first-child').innerHTML = '<i class="fas fa-check text-xs"></i>';
+                    label.querySelector('span:first-child').classList.add('bg-blue-500', 'border-blue-500', 'text-white');
+                } else {
+                    label.querySelector('span:first-child').textContent = '';
+                    label.querySelector('span:first-child').classList.remove('bg-blue-500', 'border-blue-500', 'text-white');
+                }
+            });
+        });
+
+        // Sales chart
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(salesCtx, {
+            type: 'line',
+            data: {
